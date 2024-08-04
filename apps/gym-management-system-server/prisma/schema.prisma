@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Trainer {
+  classes   ClassModel[]
+  createdAt DateTime     @default(now())
+  email     String?
+  firstName String?
+  id        String       @id @default(cuid())
+  lastName  String?
+  specialty String?
+  updatedAt DateTime     @updatedAt
+}
+
+model Member {
+  createdAt           DateTime  @default(now())
+  email               String?
+  firstName           String?
+  id                  String    @id @default(cuid())
+  lastName            String?
+  membershipStartDate DateTime?
+  updatedAt           DateTime  @updatedAt
+}
+
+model ClassModel {
+  className String?
+  createdAt DateTime  @default(now())
+  duration  Int?
+  id        String    @id @default(cuid())
+  schedule  DateTime?
+  trainer   Trainer?  @relation(fields: [trainerId], references: [id])
+  trainerId String?
+  updatedAt DateTime  @updatedAt
+}
+
+model SubscriptionType {
+  createdAt        DateTime @default(now())
+  durationInMonths Int?
+  id               String   @id @default(cuid())
+  price            Float?
+  typeName         String?
+  updatedAt        DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
